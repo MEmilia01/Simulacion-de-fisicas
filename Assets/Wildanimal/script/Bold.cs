@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Bold : MonoBehaviour
 {
@@ -30,8 +31,7 @@ public class Bold : MonoBehaviour
         Vector3 dirObjetivo = Cohesion*pesoCohesion + Alineacion*pesoAlineacion + Separacion*pesoSeparacion;
         dirObjetivo.Normalize();
 
-        transform.position = Vector3.Lerp(transform.forward, dirObjetivo, velocidadgiro);
-
+        transform.position = Vector3.Lerp(transform.forward, dirObjetivo, velocidadgiro*Time.deltaTime);
         transform.position += transform.forward* velo* Time.deltaTime;
     }
 
@@ -39,17 +39,46 @@ public class Bold : MonoBehaviour
     private Vector3 CalcularCohesion()
     { 
         Vector3 centro = Vector3.zero;
-        int numvector = 0;
+        int numvecinos = 0;
 
-        foreach ()
+        foreach (Bold actualbold in manager.bolds)
         {
-
+            if (actualbold == this) continue;
+            if(Vector3.Distance(transform.position, actualbold.transform.position) < radio)
+            {
+                centro += actualbold.transform.position;
+                numvecinos++;    
+            }
         }
-
+        centro/=numvecinos;
         return Vector3.zero;
     }
     private Vector3 CalcularAlineacion()
-    { return Vector3.zero; }
+    { 
+        Vector3 dir = Vector3.zero;
+
+        foreach (Bold actualbold in manager.bolds)
+        {
+            if (actualbold == this) continue;
+            if (Vector3.Distance(transform.position, actualbold.transform.position) < radio)
+            {
+                dir += actualbold.transform.position;
+            }
+        }
+        return dir.normalized; 
+    }
     private Vector3 CalcularSeparacion()
-    { return Vector3.zero; }
+    {
+        Vector3 dir = Vector3.zero;
+
+        foreach (Bold actualbold in manager.bolds)
+        {
+            if (actualbold == this) continue;
+            if (Vector3.Distance(transform.position,actualbold.transform.position) < radioSeparacion)
+            {
+                dir += (transform.position - actualbold.transform.position);
+            }
+        }
+        return Vector3.zero;
+    }
 }
