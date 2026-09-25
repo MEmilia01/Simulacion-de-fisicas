@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2031920142051576691}
   - component: {fileID: 1132506235822110655}
   - component: {fileID: 6812819940231667346}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,4 +126,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bold
   velo: 2
-  aa: 0
+  velocidadgiro: 2
+  radio: 4
+  radioSeparacion: 0.5
+  pesoCohesion: 1
+  pesoAlineacion: 1
+  pesoSeparacion: 1.5

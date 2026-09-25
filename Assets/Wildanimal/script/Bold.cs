@@ -17,6 +17,7 @@ public class Bold : MonoBehaviour
     public float pesoAlineacion = 1f;
     public float pesoSeparacion = 1.5f;
     public float pesolimite = 4f;
+    public float pesoObstaculo = 4f;
 
     BoldManager manager;
 
@@ -31,6 +32,7 @@ public class Bold : MonoBehaviour
         Vector3 Alineacion = CalcularAlineacion();
         Vector3 Separacion = CalcularSeparacion();
         Vector3 Limite = CalcularLimite();
+        Vector3 Obstaculo = CalcularDifObstaculo();
 
         Vector3 dirObjetivo = Cohesion*pesoCohesion + Alineacion*pesoAlineacion + Separacion*pesoSeparacion;
         dirObjetivo.Normalize();
@@ -48,7 +50,7 @@ public class Bold : MonoBehaviour
         foreach (Bold actualbold in manager.bolds)
         {
             if (actualbold == this) continue;
-            if(Vector3.Distance(transform.position, actualbold.transform.position) < radio)
+            if(Vector3.SqrMagnitude(transform.position - actualbold.transform.position) < radio * radio && EnVista(actualbold))
             {
                 centro += actualbold.transform.position;
                 numvecinos++;    
@@ -64,7 +66,7 @@ public class Bold : MonoBehaviour
         foreach (Bold actualbold in manager.bolds)
         {
             if (actualbold == this) continue;
-            if (Vector3.Distance(transform.position, actualbold.transform.position) < radio)
+            if (Vector3.SqrMagnitude(transform.position - actualbold.transform.position) < radio * radio && EnVista(actualbold))
             {
                 dir += actualbold.transform.position;
             }
@@ -78,7 +80,7 @@ public class Bold : MonoBehaviour
         foreach (Bold actualbold in manager.bolds)
         {
             if (actualbold == this) continue;
-            if (Vector3.Distance(transform.position,actualbold.transform.position) < radioSeparacion)
+            if (Vector3.SqrMagnitude(transform.position - actualbold.transform.position) < radioSeparacion*radioSeparacion)
             {
                 dir += (transform.position - actualbold.transform.position);
             }
@@ -89,9 +91,18 @@ public class Bold : MonoBehaviour
     private Vector3 CalcularLimite()
     {
         Vector3 dir = Vector3.zero;
-        if (Vector3.Distance(manager.transform.position, transform.position) < manager.radiozone)
+        if (Vector3.SqrMagnitude(manager.transform.position - transform.position) < manager.radiozone * manager.radiozone)
         {
             return Vector3.zero;
+        }
+        return (manager.transform.position - transform.position).normalized;
+    }
+    private Vector3 CalcularDifObstaculo()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, radio, capaobjetos))
+        {
+            return hit.normal;
         }
         return (manager.transform.position - transform.position).normalized;
     }
