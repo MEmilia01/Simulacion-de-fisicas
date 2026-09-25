@@ -11,9 +11,12 @@ public class Bold : MonoBehaviour
 
     public float radio = 4f;
     public float radioSeparacion = 0.5f;
+    public float anguloVista = 80f;
+
     public float pesoCohesion = 1f;
     public float pesoAlineacion = 1f;
     public float pesoSeparacion = 1.5f;
+    public float pesolimite = 4f;
 
     BoldManager manager;
 
@@ -27,6 +30,7 @@ public class Bold : MonoBehaviour
         Vector3 Cohesion = CalcularCohesion();
         Vector3 Alineacion = CalcularAlineacion();
         Vector3 Separacion = CalcularSeparacion();
+        Vector3 Limite = CalcularLimite();
 
         Vector3 dirObjetivo = Cohesion*pesoCohesion + Alineacion*pesoAlineacion + Separacion*pesoSeparacion;
         dirObjetivo.Normalize();
@@ -80,5 +84,23 @@ public class Bold : MonoBehaviour
             }
         }
         return Vector3.zero;
+    }
+
+    private Vector3 CalcularLimite()
+    {
+        Vector3 dir = Vector3.zero;
+        if (Vector3.Distance(manager.transform.position, transform.position) < manager.radiozone)
+        {
+            return Vector3.zero;
+        }
+        return (manager.transform.position - transform.position).normalized;
+    }
+
+    bool EnVista(Bold otros)
+    {
+        Vector3 dirOtros = otros.transform.position - transform.position;
+        float angle = Vector3.Angle(transform.forward,dirOtros);
+        if (angle < anguloVista) return true;
+        return false;
     }
 }

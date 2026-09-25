@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 public class BoldManager : MonoBehaviour
 {
-    public static BoldManager Instance(get; private set;);
+    public static BoldManager Instance (get; private set;)
     [SerializeField] GameObject boldprefab;
+    public float radiozone;
 
     //spaw info
     public int cantidad = 5;
@@ -24,7 +25,7 @@ public class BoldManager : MonoBehaviour
         for (int i = 0; i < cantidad; i++)
         {
             GameObject go = Instantiate(boldprefab, this.transform.position + Random.insideUnitSphere + radioSpaw, Random.rotation);
-            bolds.Add
+            bolds.Add(go.);
         }
     }
 
